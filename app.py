@@ -296,6 +296,9 @@ def upload_file():
         print("An unexpected error occurred:", e)
         return jsonify({"error": "An unexpected error occurred."}), 500
 
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
