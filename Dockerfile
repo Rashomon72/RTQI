@@ -1,6 +1,11 @@
 # Use an official Python runtime as a base image
 FROM python:3.10-slim
 
+# Install system packages needed by OpenCV
+RUN apt-get update && \
+    apt-get install -y libgl1 libglib2.0-0 && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set the working directory inside the container
 WORKDIR /app
 
