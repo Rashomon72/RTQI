@@ -322,4 +322,5 @@ if __name__ == '__main__':
     # Clustering Pickle file
     csv_path = "weights/Clustering_dataset.csv"
 
-    app.run(host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
+    app.run(host="0.0.0.0", port=port)
