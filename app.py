@@ -7,6 +7,7 @@ from helpers.multer_helper import handle_file_upload
 from helpers.commonStringLength import longest_common_substring
 from dotenv import load_dotenv
 from db.dbConnection import MongoDB
+from pymongo import MongoClient
 from flask import Flask, request, jsonify, redirect, url_for, session, flash
 import torch
 import os
@@ -31,8 +32,10 @@ UPLOAD_FOLDER = os.path.join(app.root_path, 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Configure server-side session storage
-app.config['SESSION_TYPE'] = 'filesystem'  # You can also use 'redis' or 'mongodb'
-app.config['SESSION_FILE_DIR'] = os.path.join(app.root_path, 'flask_sessions')  # For filesystem storage
+app.config['SESSION_TYPE'] = 'mongodb'  # You can also use 'redis'
+app.config['SESSION_MONGODB'] = MongoClient(os.getenv("MONGO_URI"))
+app.config['SESSION_MONGODB_DB'] = os.getenv("DATABASE_NAME")
+app.config['SESSION_MONGODB_COLLECT'] = 'sessions'  # For mongo storage
 app.config['SESSION_PERMANENT'] = False
 app.secret_key = os.getenv("PASSWORD_SECRET_KEY")
 
@@ -302,21 +305,21 @@ if __name__ == '__main__':
     # A .txt file gets generated with this name when tested
     data_root = app.config['UPLOAD_FOLDER']
     annotation_file_name = "test_annotations"
-    test_model = "C:/Users/mohammad asfraf/OneDrive/Desktop/BTP-Backend/server/weights/Lane_width.pth"
+    test_model = "weights/Lane_width.pth"
     output_dir = os.path.join(
         app.config['UPLOAD_FOLDER'], "output_images").replace("\\", "/")
     images_folder = "frames"
 
     # Paths for Pothole detections:
     # Replace with your model path
-    Pot_model_path = "C:/Users/mohammad asfraf/OneDrive/Desktop/BTP/Backend/server/weights/Potholes.pt"
+    Pot_model_path = "weights/Potholes.pt"
     confidence_threshold = 0.5
     threshold = 30
 
     # Paths for Number of Lanes
-    LM_model_path = "C:/Users/mohammad asfraf/OneDrive/Desktop/BTP-Backend/server/weights/Number_of_Lanes.pt"
+    LM_model_path = "weights/Number_of_Lanes.pt"
 
     # Clustering Pickle file
-    csv_path = "C:/Users/mohammad asfraf/OneDrive/Desktop/BTP-Backend/server/weights/Clustering_dataset.csv"
+    csv_path = "weights/Clustering_dataset.csv"
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
