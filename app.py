@@ -74,7 +74,7 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 # # A .txt file gets generated with this name when tested
 data_root = app.config['UPLOAD_FOLDER']
 annotation_file_name = "test_annotations"
-# test_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
+test_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
 output_dir = os.path.join(
     app.config['UPLOAD_FOLDER'], "output_images").replace("\\", "/")
 images_folder = "frames"
@@ -248,11 +248,9 @@ def upload_file():
         # print(f"File uploaded successfully in Cloudinary: {uploaded_url}")
 
         frames_folder = extract_frames_per_minute(app.config['UPLOAD_FOLDER'], "frames")
-
-        # lane_width = predict_lane_width(data_root, annotation_file_name, test_model, output_dir, images_folder)
+        lane_width = predict_lane_width(data_root, annotation_file_name, test_model, output_dir, images_folder)
         
-        # lane_width = lane_width // 241.714      # to meters
-        lane_width = 1
+        lane_width = lane_width // 241.714      # to meters
 
         counts = pothole_detection(
             filepath, Pothole_model, confidence_threshold, threshold)
@@ -325,4 +323,4 @@ def health_check():
 
 if __name__ == '__main__':
     # port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5050)

@@ -1,0 +1,44 @@
+1. Pothole Model (.pt)
+
+ python convert.py
+Ultralytics 8.3.145  Python-3.10.0 torch-2.7.0+cpu CPU (Intel Core(TM) i3-7020U 2.30GHz)
+Model summary (fused): 72 layers, 3,006,233 parameters, 0 gradients, 8.1 GFLOPs
+
+PyTorch: starting from 'weights\Potholes.pt' with input shape (1, 3, 640, 640) BCHW and output shape(s) (1, 7, 8400) (6.0 MB)
+requirements: Ultralytics requirements ['onnx>=1.12.0,<1.18.0', 'onnxslim>=0.1.53', 'onnxruntime'] not found, attempting AutoUpdate...
+WARNING requirements:  AutoUpdate skipped (offline)
+
+ONNX: starting export with onnx 1.18.0 opset 19...
+WARNING ONNX: simplifier failure: No module named 'onnxslim'
+ONNX: export success  2.4s, saved as 'weights\Potholes.onnx' (11.7 MB)
+
+Export complete (3.5s)
+Results saved to C:\Users\HP\Desktop\RTQI-Intern\myEditedBackendCode\weights
+Predict:         yolo predict task=detect model=weights\Potholes.onnx imgsz=640
+Validate:        yolo val task=detect model=weights\Potholes.onnx imgsz=640 data=data.yaml
+Visualize:       https://netron.app
+
+
+2. Number of Lanes Model (.pt)
+
+python convert.py
+Ultralytics 8.3.145  Python-3.10.0 torch-2.7.0+cpu CPU (Intel Core(TM) i3-7020U 2.30GHz)
+YOLO11s-seg summary (fused): 113 layers, 10,068,751 parameters, 0 gradients, 35.3 GFLOPs
+
+PyTorch: starting from 'weights\Number_of_Lanes.pt' with input shape (1, 3, 640, 640) BCHW and output shape(s) ((1, 41, 8400), (1, 32, 160, 160)) (19.6 MB)
+requirements: Ultralytics requirements ['onnx>=1.12.0,<1.18.0', 'onnxslim>=0.1.53', 'onnxruntime'] not found, attempting AutoUpdate...
+WARNING requirements:  AutoUpdate skipped (offline)
+
+ONNX: starting export with onnx 1.18.0 opset 19...
+WARNING ONNX: simplifier failure: No module named 'onnxslim'
+ONNX: export success  4.5s, saved as 'weights\Number_of_Lanes.onnx' (38.6 MB)
+
+Export complete (8.1s)
+Results saved to C:\Users\HP\Desktop\RTQI-Intern\myEditedBackendCode\weights
+Predict:         yolo predict task=segment model=weights\Number_of_Lanes.onnx imgsz=640
+Validate:        yolo val task=segment model=weights\Number_of_Lanes.onnx imgsz=640 data=data.yaml
+Visualize:       https://netron.app
+
+
+3. Lane Width Model (.pth)
+
