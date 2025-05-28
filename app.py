@@ -70,11 +70,11 @@ data = {
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
-# Paths for Lane width
-# A .txt file gets generated with this name when tested
+# # Paths for Lane width
+# # A .txt file gets generated with this name when tested
 data_root = app.config['UPLOAD_FOLDER']
 annotation_file_name = "test_annotations"
-test_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
+# test_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
 output_dir = os.path.join(
     app.config['UPLOAD_FOLDER'], "output_images").replace("\\", "/")
 images_folder = "frames"
@@ -247,13 +247,12 @@ def upload_file():
         # uploaded_url = handle_cloudinary_upload(filepath)
         # print(f"File uploaded successfully in Cloudinary: {uploaded_url}")
 
-        frames_folder = extract_frames_per_minute(
-            app.config['UPLOAD_FOLDER'], "frames")
+        frames_folder = extract_frames_per_minute(app.config['UPLOAD_FOLDER'], "frames")
 
-        lane_width = predict_lane_width(
-            data_root, annotation_file_name, test_model, output_dir, images_folder)
+        # lane_width = predict_lane_width(data_root, annotation_file_name, test_model, output_dir, images_folder)
         
-        lane_width = lane_width // 241.714      # to meters
+        # lane_width = lane_width // 241.714      # to meters
+        lane_width = 1
 
         counts = pothole_detection(
             filepath, Pothole_model, confidence_threshold, threshold)
