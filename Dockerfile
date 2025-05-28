@@ -24,6 +24,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir -p uploads frames output_images
 
 # Run the application with Gunicorn
-# CMD ["gunicorn", "--preload", "-w", "2", "-b", "0.0.0.0:8080", "app:app"]
+CMD ["gunicorn", "--preload", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
 # CMD exec gunicorn --bind :$PORT --workers 4 --threads 8 --timeout 120 app:app
-CMD ["sh", "-c", "exec gunicorn --bind :$PORT --workers 4 --threads 8 --timeout 120 app:app"]
+# CMD ["sh", "-c", "exec gunicorn --bind :$PORT --workers 4 --threads 8 --timeout 120 app:app"]
