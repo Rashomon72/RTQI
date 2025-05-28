@@ -93,7 +93,7 @@ def predict_lane_width(data_root, annotation_file_name, test_model, output_dir, 
     net = parsingNet(pretrained=False, backbone=cfg.backbone, cls_dim=(cfg.griding_num + 1, cls_num_per_lane, cfg.num_lanes),
                      use_aux=False).to(device)
 
-    state_dict = torch.load(cfg.test_model, map_location='cpu')['model']
+    state_dict = cfg.test_model
     net.load_state_dict(
         {k[7:] if 'module.' in k else k: v for k, v in state_dict.items()}, strict=False)
 

@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
-from ultralytics import YOLO
 
-def pothole_detection(video_path, model_path, confidence_threshold=0.5, threshold=30):
+
+def pothole_detection(video_path, model, confidence_threshold=0.5, threshold=30):
     """
     Counts unique objects in a video using YOLO model detections.
 
@@ -16,8 +16,7 @@ def pothole_detection(video_path, model_path, confidence_threshold=0.5, threshol
     Returns:
         dict: Dictionary with counts of unique objects for each specified class.
     """
-    # Load the YOLO model
-    model = YOLO("C:/Users/mohammad asfraf/OneDrive/Desktop/BTP-Backend/server/weights/Potholes.pt")
+    # Load the YOLO model classes
     classes_to_count = ['Drain Hole', 'Pothole', 'Sewer Cover']
 
     # Initialize counts and tracking

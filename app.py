@@ -17,6 +17,7 @@ from api.here_api import getPolyline, getTraffic, getWeather
 from clustering.clustering import hierarchical_clustering_with_rtqi
 from bcrypt import hashpw, gensalt, checkpw
 import json
+from ultralytics import YOLO
 from api.here_api import *
 from flask_session import Session
 
@@ -65,6 +66,30 @@ data = {
     "data": {},
     "RTQI": None,
 }
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# Paths for Lane width
+# A .txt file gets generated with this name when tested
+data_root = app.config['UPLOAD_FOLDER']
+annotation_file_name = "test_annotations"
+test_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
+output_dir = os.path.join(
+    app.config['UPLOAD_FOLDER'], "output_images").replace("\\", "/")
+images_folder = "frames"
+
+# Paths for Pothole detections:
+Pothole_model = YOLO("weights/Potholes.pt")
+confidence_threshold = 0.5
+threshold = 30
+
+# Paths for Number of Lanes
+LM_model = YOLO("weights/Number_of_Lanes.pt")
+
+
+# Clustering Pickle file
+csv_path = "weights/Clustering_dataset.csv"
 
 
 @app.route('/test', methods=['GET'])
@@ -232,10 +257,10 @@ def upload_file():
         lane_width = lane_width // 241.714      # to meters
 
         counts = pothole_detection(
-            filepath, Pot_model_path, confidence_threshold, threshold)
+            filepath, Pothole_model, confidence_threshold, threshold)
         print("Total unique counts for each class:")
 
-        number_of_lanes = Lane_Markings(data_root, LM_model_path, images_folder)
+        number_of_lanes = Lane_Markings(data_root, LM_model, images_folder)
 
         if lane_width > 0 and number_of_lanes > 0:
             lane_marking = 1
@@ -301,29 +326,5 @@ def health_check():
     return jsonify({"status": "ok"}), 200
 
 if __name__ == '__main__':
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
-
-    # Paths for Lane width
-    # A .txt file gets generated with this name when tested
-    data_root = app.config['UPLOAD_FOLDER']
-    annotation_file_name = "test_annotations"
-    test_model = "weights/Lane_width.pth"
-    output_dir = os.path.join(
-        app.config['UPLOAD_FOLDER'], "output_images").replace("\\", "/")
-    images_folder = "frames"
-
-    # Paths for Pothole detections:
-    # Replace with your model path
-    Pot_model_path = "weights/Potholes.pt"
-    confidence_threshold = 0.5
-    threshold = 30
-
-    # Paths for Number of Lanes
-    LM_model_path = "weights/Number_of_Lanes.pt"
-
-    # Clustering Pickle file
-    csv_path = "weights/Clustering_dataset.csv"
-
     port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
     app.run(host="0.0.0.0", port=port)

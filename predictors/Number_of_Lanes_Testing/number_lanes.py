@@ -29,11 +29,7 @@ def logicCases(results):
 
     return mode(store)
 
-def Lane_Markings(data_root, LM_model_path, images_dir):
-
-    model_path = LM_model_path
-    model = YOLO(model_path)
-
+def Lane_Markings(data_root, LM_model, images_dir):
     image_dir = os.path.join(data_root, images_dir).replace("\\", "/")
 
     results = []
@@ -42,6 +38,6 @@ def Lane_Markings(data_root, LM_model_path, images_dir):
         if filename.endswith(".jpg") or filename.endswith(".png"):
             image_path = os.path.join(image_dir, filename)
 
-            results.append(model(image_path))
+            results.append(LM_model(image_path))
 
     return logicCases(results)
