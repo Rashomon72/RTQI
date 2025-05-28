@@ -25,4 +25,4 @@ RUN mkdir -p uploads frames output_images
 
 # Run the application with Gunicorn
 # CMD ["gunicorn", "--preload", "-w", "2", "-b", "0.0.0.0:8080", "app:app"]
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+CMD exec gunicorn --bind :$PORT --workers 4 --threads 8 --timeout 0 app:app

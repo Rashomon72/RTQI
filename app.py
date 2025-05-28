@@ -87,7 +87,6 @@ threshold = 30
 # Paths for Number of Lanes
 LM_model = YOLO("weights/Number_of_Lanes.pt")
 
-
 # Clustering Pickle file
 csv_path = "weights/Clustering_dataset.csv"
 
@@ -325,6 +324,6 @@ def upload_file():
 def health_check():
     return jsonify({"status": "ok"}), 200
 
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
-    app.run(host="0.0.0.0", port=port)
+# if __name__ == '__main__':
+#     port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
+#     app.run(host="0.0.0.0", port=port)
