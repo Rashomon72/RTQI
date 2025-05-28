@@ -74,21 +74,41 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 # A .txt file gets generated with this name when tested
 data_root = app.config['UPLOAD_FOLDER']
 annotation_file_name = "test_annotations"
-test_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
+_width_model = None
 output_dir = os.path.join(
     app.config['UPLOAD_FOLDER'], "output_images").replace("\\", "/")
 images_folder = "frames"
 
+
 # Paths for Pothole detections:
-Pothole_model = YOLO("weights/Potholes.pt")
+_pothole_model = None
 confidence_threshold = 0.5
 threshold = 30
 
 # Paths for Number of Lanes
-LM_model = YOLO("weights/Number_of_Lanes.pt")
+_lane_model = None
 
 # Clustering Pickle file
 csv_path = "weights/Clustering_dataset.csv"
+
+
+def get_width_model():
+    global _width_model
+    if _width_model is None:
+        _width_model = torch.load("weights/Lane_width.pth", map_location='cpu')['model']
+    return _width_model
+
+def get_lane_model():
+    global _lane_model
+    if _lane_model is None:
+        _lane_model = YOLO("weights/Number_of_Lanes.pt")
+    return _lane_model
+
+def get_pothole_model():
+    global _pothole_model
+    if _pothole_model is None:
+        _pothole_model = YOLO("weights/Potholes.pt")
+    return _pothole_model
 
 
 @app.route('/test', methods=['GET'])
@@ -251,15 +271,15 @@ def upload_file():
             app.config['UPLOAD_FOLDER'], "frames")
 
         lane_width = predict_lane_width(
-            data_root, annotation_file_name, test_model, output_dir, images_folder)
+            data_root, annotation_file_name, get_width_model(), output_dir, images_folder)
         
         lane_width = lane_width // 241.714      # to meters
 
         counts = pothole_detection(
-            filepath, Pothole_model, confidence_threshold, threshold)
+            filepath, get_pothole_model(), confidence_threshold, threshold)
         print("Total unique counts for each class:")
 
-        number_of_lanes = Lane_Markings(data_root, LM_model, images_folder)
+        number_of_lanes = Lane_Markings(data_root, get_lane_model(), images_folder)
 
         if lane_width > 0 and number_of_lanes > 0:
             lane_marking = 1
@@ -325,6 +345,6 @@ def health_check():
     return jsonify({"status": "ok"}), 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
+    # port = int(os.environ.get("PORT", 3000))  # Use Render's PORT or default to 3000 locally
     # app.run(host="0.0.0.0", port=port)
     app.run()
